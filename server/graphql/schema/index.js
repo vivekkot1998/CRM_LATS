@@ -1,17 +1,44 @@
+//  const { buildSchema } = require('graphql');
+
+// module.exports = buildSchema(`
+
+// type AuthAgentData {
+//     userId: String!
+//     message: String!
+//     statusCode: Int!
+// }
+
+
+// type RootQuery {
+    
+//     login(userid: String!, password: String!): AuthAgentData!
+// }
+// type RootMutation {
+    
+// }
+
+
+// schema {
+//     query: RootQuery
+//     mutation: RootMutation
+// }
+// `)
 const { buildSchema } = require('graphql');
 
 module.exports = buildSchema(`
 
-type Agent {
+type AuthAgentData {
     userId: String!
-    password: String!
+    message: String!
+    statusCode: Int!
 }
 
 type RootQuery {
-    checkAgentForLogin: 
-}
-type RootMutation {
-
+   
+    login(userid: String!, password: String!): AuthAgentData!
 }
 
+schema {
+    query: RootQuery
+}
 `)

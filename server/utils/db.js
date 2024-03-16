@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
 
-//const URI = "mongodb://127.0.0.1:27017/crm_tool";
-
-
 const URI = process.env.MONGODB_URI
-
 
 const connectDb = async () => {
     try{
