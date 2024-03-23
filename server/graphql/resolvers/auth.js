@@ -39,14 +39,15 @@ module.exports = {
         }
     },
 
-    login: async({userid, password}) => {
-        const apiResponse = await axios.get('http://192.168.2.200//agc/api.php?source=test&user='+ userid +'&pass='+ password +'&function=webserver');
-        if(apiResponse.data.startsWith('ERROR')){
-            throw new Error('login error'+ apiResponse.data);
+    AgentIdentity: async (args, req) => {
+        console.log(req);
+        if(!req.isAuth){
+            throw new Error('Unauthenticated');
         }
+
         return {
-            userId: userid,
-            message: "login done",
+            userId: req.userId,
+            message: "Authenticated Agent",
             statusCode: 1
         }
     }

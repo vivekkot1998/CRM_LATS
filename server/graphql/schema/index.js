@@ -18,10 +18,13 @@ input AgentInput {
     userId: String!
     password: String!
 }
+input TokenInput {
+    token: String!
+}
 
 type RootQuery {
    
-    login(userid: String!, password: String!): AuthAgentData!
+    AgentIdentity: AuthAgentData!
 }
 
 type RootMutation {

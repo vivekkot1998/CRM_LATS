@@ -9,10 +9,14 @@ const  {graphqlHTTP}  = require('express-graphql');
 const graphQlSchema = require('./graphql/schema/index');
 const graphqlResolvers = require('./graphql/resolvers/index');
 
+const isAuth = require('./middleware/is-auth');
+
 const app = express();
 
 app.use(bodyParser.json());
 app.use(cors());
+
+app.use(isAuth);
 
 app.use(
     '/graphql',
