@@ -19,9 +19,9 @@ module.exports = {
                         userId: args.agentInput.userId
                     },
                     'somesupersecretkey',
-                    {
-                        expiresIn: '1h'
-                    }
+                    // {
+                    //     expiresIn: '1h'
+                    // }
                 );
     
                 const hashedPassword = await bcrypt.hash(args.agentInput.password, 12);
@@ -30,7 +30,9 @@ module.exports = {
                 //     password: hashedPassword
                 // });
                 // const result = await agent.save();
-                return { password: hashedPassword, userId: args.agentInput.userId, token: token, tokenExpiration: 1}
+                //return { password: hashedPassword, userId: args.agentInput.userId, token: token, tokenExpiration: 1}
+                return { password: hashedPassword, userId: args.agentInput.userId, token: token}
+
             }
 
            
@@ -40,7 +42,7 @@ module.exports = {
     },
 
     AgentIdentity: async (args, req) => {
-        console.log(req);
+        //console.log(req);
         if(!req.isAuth){
             throw new Error('Unauthenticated');
         }
@@ -48,7 +50,12 @@ module.exports = {
         return {
             userId: req.userId,
             message: "Authenticated Agent",
-            statusCode: 1
+            statusCode: 1,
+            name: "Vivek Kothari",
+            email: "vivek@test.com",
+            phone: "1234567890",
+            jobTitle: "Developer",
+            avatarUrl: "NA"
         }
     }
 }
