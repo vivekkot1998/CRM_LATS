@@ -2,18 +2,81 @@ const { PubSub } = require('graphql-subscriptions');
 const pubsub = new PubSub();
 
 module.exports = {
-    companies: async (args, req) => {
-        //console.log(req);
-        if(!req.isAuth){
-            throw new Error('Unauthenticated');
-        }
-        const companies= {
-            totalCount: 1
-        }
+    // companies: async (args, req) => {
+    //     //console.log(req);
+    //     if(!req.isAuth){
+    //         throw new Error('Unauthenticated');
+    //     }
+    //     const companies= {
+    //         totalCount: 5,
+    //         nodes:[{
+    //           id: 1,
+    //           name: "Mary Spragg",
+    //           avatarUrl: "https://refine-crm.ams3.cdn.digitaloceanspaces.com/companies/1.png",
+    //           // dealsAggregate: [
+    //           //   {
+    //           //     sum: {
+    //           //       value: 477204
+    //           //     }
+    //           //   }
+    //           // ]
+    //         },
+    //         {
+    //           id: 2,
+    //           name: "June Pulham",
+    //           avatarUrl: "https://refine-crm.ams3.cdn.digitaloceanspaces.com/companies/2.png",
+    //           // dealsAggregate: [
+    //           //   {
+    //           //     sum: {
+    //           //       value: 510702
+    //           //     }
+    //           //   }
+    //           //]
+    //         },
+    //         {
+    //           "id": "3",
+    //           "name": "Desmond Newling",
+    //           "avatarUrl": "https://refine-crm.ams3.cdn.digitaloceanspaces.com/companies/3.png",
+    //           // "dealsAggregate": [
+    //           //   {
+    //           //     "sum": {
+    //           //       "value": 446860
+    //           //     }
+    //           //   }
+    //           // ]
+    //         },
+    //         {
+    //           "id": "4",
+    //           "name": "Anne Finlay",
+    //           "avatarUrl": "https://refine-crm.ams3.cdn.digitaloceanspaces.com/companies/4.png",
+    //           // "dealsAggregate": [
+    //           //   {
+    //           //     "sum": {
+    //           //       "value": 400641
+    //           //     }
+    //           //   }
+    //           // ]
+    //         },
+    //         {
+    //           "id": "5",
+    //           "name": "Ferelsa Bishop",
+    //           "avatarUrl": "https://refine-crm.ams3.cdn.digitaloceanspaces.com/companies/5.png",
+    //           // "dealsAggregate": [
+    //           //   {
+    //           //     "sum": {
+    //           //       "value": 536800
+    //           //     }
+    //           //   }
+    //           // ]
+    //         }
+              
+    //         ]
+    //     }
 
-        return companies
+    //     return companies
         
-    },
+    // },
+    
     contacts: async (args, req) => {
         //console.log(req);
         if(!req.isAuth){

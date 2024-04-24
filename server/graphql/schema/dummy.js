@@ -1,7 +1,3 @@
-const { buildSchema } = require('graphql');
-
-module.exports = buildSchema(`
-
 
 input EventFilter {
     startDate: String
@@ -27,12 +23,12 @@ type AuthAgentData {
     avatarUrl: String
 }
 type User {
+    _id: ID!
     id: String!
     name: String!
     password: String!
     avatarUrl: String
     role: Role!
-    companies: UserCompaniesConnection
 }
 type Event {
     id: ID!
@@ -48,7 +44,7 @@ type CompanyDealsAggregateResponse{
     sum: CompanyDealsSumAggregate
 }
 type Company{
-    _id: ID!
+    id: ID!
     name: String!
     avatarUrl:String!
     salesOwner: User
@@ -56,11 +52,6 @@ type Company{
 type UserConnection {
     pageInfo: OffsetPageInfo!
     nodes: [User!]!
-    totalCount: Int!
-}
-type UserCompaniesConnection {
-    pageInfo: OffsetPageInfo!
-    nodes: [Company!]!
     totalCount: Int!
 }
 type  CompanyConnection{
@@ -120,6 +111,7 @@ input LoginInput {
 }
 input CompanyCreateInput {
     name: String!
+    salesOwnerId: ID
 }
 
 input AgentInput {
@@ -131,14 +123,6 @@ input TokenInput {
 }
 input CreateOneCompanyInput {
     company: CompanyCreateInput!
-}
-input CompanyUpdateInput {
-    name: String
-    salesOwnerId: ID
-}
-input UpdateOneCompanyInput {
-    _id: ID!
-    update: CompanyUpdateInput!
 }
 input OffsetPaging {
     limit: Int
@@ -164,11 +148,9 @@ type RootMutation {
     login(loginInput: LoginInput!): AuthResponse!
     createAgentLogin(agentInput: AgentInput): Agent
     createOneCompany(input: CreateOneCompanyInput!): Company!
-    updateOneCompany(input: UpdateOneCompanyInput!): Company!
 }
 
 schema {
     query: RootQuery
     mutation: RootMutation
 }
-`)
