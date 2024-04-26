@@ -48,10 +48,17 @@ type CompanyDealsAggregateResponse{
     sum: CompanyDealsSumAggregate
 }
 type Company{
-    _id: ID!
+    id: ID!
     name: String!
     avatarUrl:String!
     salesOwner: User
+    address: String
+    address1: String
+    address2: String
+    city: String
+    country: String
+    postcode: String
+    phoneNumber: String
 }
 type UserConnection {
     pageInfo: OffsetPageInfo!
@@ -135,9 +142,16 @@ input CreateOneCompanyInput {
 input CompanyUpdateInput {
     name: String
     salesOwnerId: ID
+    address: String
+    address1: String
+    address2: String
+    city: String
+    country: String
+    postcode: String
+    phoneNumber: String
 }
-input UpdateOneCompanyInput {
-    _id: ID!
+input UpdateOneCompanyInput { 
+    id: ID!
     update: CompanyUpdateInput!
 }
 input OffsetPaging {
@@ -153,6 +167,7 @@ input EventSort {
 type RootQuery {
     AgentIdentity: AuthAgentData!
     users: UserConnection!
+    company(id: ID!): Company!
     companies: CompanyConnection!
     contacts: ContactsConnection!
     deals: DealsConnection!

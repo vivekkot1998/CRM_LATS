@@ -24,8 +24,6 @@ const userSchema = new Schema({
         ref: 'Role'
     },
     companies: {
-        // type: Schema.Types.ObjectId,
-        // ref: 'UserCompaniesConnection'
         totalCount: {
             type:String,
             required: true

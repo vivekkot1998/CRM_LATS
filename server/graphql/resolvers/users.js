@@ -1,3 +1,6 @@
+
+const User = require('../../models/user');
+
 module.exports = {
 
     users: async (args,req) => {
@@ -5,7 +8,19 @@ module.exports = {
             throw new Error('Unauthenticated');
         }
         try{
-
+          let usersArr=[];
+          const users1 = await User.find();
+              users1.map(user => {
+                   //console.log(user);
+                   usersArr.push(user);
+              //console.log(usersArr.length);
+          })
+          const users= {
+              totalCount: usersArr.length,
+              nodes: usersArr
+          }
+          //console.log(users);
+              return users
         }catch(err){
           throw err;
         }
