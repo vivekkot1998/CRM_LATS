@@ -198,16 +198,20 @@ module.exports={
             throw new Error('Unauthenticated');
         }
         try {
-            let companyNotesArr=[];
-            const companyNotes1 = await CompanyNote.find();
-                companyNotes1.map(companyNote => {
-                    companyNotesArr.push(transformCompanyNote(companyNote));
-                })
-                const companyNotes = {
-                    totalCount: companyNotesArr.length,
-                    nodes: companyNotesArr
-                }
-                return companyNotes             
+            const filterCompany = await Company.find({id: args.filter.company.id.eq })
+            const companyNotes1 = filterCompany[0].notes.nodes
+           const companyNotesArr = await Promise.all(companyNotes1.map(async (companyNote) => {
+            const companyNotes2 = await CompanyNote.findById(companyNote);
+            return transformCompanyNote(companyNotes2);
+        }));
+
+        console.log(companyNotesArr);
+
+        const companyNotes = {
+            totalCount: companyNotesArr.length,
+            nodes: companyNotesArr
+        };
+                return companyNotes 
         } catch (error) {
             throw error
         }

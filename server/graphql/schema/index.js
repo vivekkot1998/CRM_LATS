@@ -171,6 +171,15 @@ input UpdateOneCompanyInput {
     id: ID!
     update: CompanyUpdateInput!
 }
+input CompanyNoteFilter {
+    company: CompanyNoteFilterCompanyFilter
+}
+input CompanyNoteFilterCompanyFilter{
+    id: IDFilterComparison
+}
+input IDFilterComparison {
+    eq:ID
+}
 input CompanyNoteCreateInput {
     note: String!
     companyId: ID!
@@ -193,7 +202,7 @@ type RootQuery {
     users: UserConnection!
     company(id: ID!): Company!
     companies: CompanyConnection!
-    companyNotes: CompanyNoteConnection!
+    companyNotes(filter: CompanyNoteFilter = {}): CompanyNoteConnection!
     contacts: ContactsConnection!
     deals: DealsConnection!
     events: EventConnection! 
