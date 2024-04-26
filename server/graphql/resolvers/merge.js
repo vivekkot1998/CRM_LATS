@@ -1,5 +1,6 @@
 const Company = require('../../models/company');
 const User = require('../../models/user');
+const CompanyNote = require('../../models/companyNote');
 
 // const { dateToString } = require('../../helpers/date');
 
@@ -14,15 +15,29 @@ const companies = async companyIds => {
     }
 };
 
-// const singleEvent = async eventId => {
-//     try{
-//         const event = await Event.findById(eventId);
-//         return transformEvent(event);
-//     }catch (err) {
-//         throw err;
-//     }
-// }
-
+const company = async compnayID => {
+    try{
+        const company = await Company.findById(compnayID);
+        //return transformCompany(Company);
+        return {
+            ...company._doc, 
+            _id: company.id, 
+            notes: companyNotes.bind(this, company._doc.notes)
+        };
+    }catch (err) {
+        throw err;
+    }
+}
+const companyNotes = async companyNotesIds => {
+    try{
+        const companyNotes = await CompanyNote.find({_id: {$in: companyNotesIds}}) 
+        return companyNotes.map(companyNote => {
+            return transformCompanyNote(companyNote);
+        });
+    }catch(err) {
+        throw err;
+    }
+}
 const user = async userID => {
     try{
         const user = await User.findById(userID)
@@ -41,7 +56,16 @@ const transformCompany = company => {
         ...company._doc, 
         _id: company.id, 
         // date: dateToString(company._doc.date),
-        salesOwner: user.bind(this, company.salesOwner)
+        salesOwner: user.bind(this, company.salesOwner),
+    };
+};
+const transformCompanyNote = companyNote => {
+    return {
+        ...companyNote._doc, 
+        _id: companyNote.id, 
+        // date: dateToString(company._doc.date),
+        createdBy: user.bind(this, companyNote.createdBy),
+        company: company.bind(this, companyNote.company)
     };
 };
 
@@ -58,6 +82,7 @@ const transformCompany = company => {
 
 
 exports.transformCompany = transformCompany;
+exports.transformCompanyNote = transformCompanyNote;
 //exports.transformBooking = transformBooking;
 //exports.user = user;
 //exports.events = events;

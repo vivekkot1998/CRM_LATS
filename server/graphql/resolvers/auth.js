@@ -109,21 +109,30 @@ module.exports = {
         }
      },
 
-    AgentIdentity: async (args, req) => {
+    me: async (args, req) => {
         //console.log(req);
         if(!req.isAuth){
             throw new Error('Unauthenticated');
         }
+        //console.log(req.userId);
+        try{
+            const me = await User.findById(req.userId);
+            //console.log(me);
 
-        return {
-            userId: req.userId,
-            message: "Authenticated Agent",
-            statusCode: 1,
-            name: "Vivek Kothari",
-            email: "vivek@test.com",
-            phone: "1234567890",
-            jobTitle: "Developer",
-            avatarUrl: "NA"
+            return me;
+        }catch(err){
+            throw err;
         }
+
+        // return {
+        //     userId: req.userId,
+        //     message: "Authenticated Agent",
+        //     statusCode: 1,
+        //     name: "Vivek Kothari",
+        //     email: "vivek@test.com",
+        //     phone: "1234567890",
+        //     jobTitle: "Developer",
+        //     avatarUrl: "NA"
+        // }
     }
 }

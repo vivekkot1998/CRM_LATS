@@ -2,7 +2,7 @@ const { buildSchema } = require('graphql');
 
 module.exports = buildSchema(`
 
-
+scalar DateTime
 input EventFilter {
     startDate: String
 }
@@ -59,6 +59,13 @@ type Company{
     country: String
     postcode: String
     phoneNumber: String
+    notes: CompanyNotesConnection
+}
+type CompanyNote {
+    id: ID!
+    note: String!
+    createdBy: User!
+    company: Company!
 }
 type UserConnection {
     pageInfo: OffsetPageInfo!
@@ -70,9 +77,14 @@ type UserCompaniesConnection {
     nodes: [Company!]!
     totalCount: Int!
 }
-type  CompanyConnection{
+type CompanyConnection{
     pageInfo: OffsetPageInfo!
     nodes: [Company!]!
+    totalCount: Int!
+}
+type CompanyNotesConnection {
+    pageInfo: OffsetPageInfo!
+    nodes: [CompanyNote!]!
     totalCount: Int!
 }
 type  ContactsConnection{
@@ -84,6 +96,11 @@ type  DealsConnection{
 type EventConnection {
     pageInfo: OffsetPageInfo!
     nodes: [Event!]!
+    totalCount: Int!
+}
+type CompanyNoteConnection {
+    pageInfo: OffsetPageInfo!
+    nodes: [CompanyNote!]!
     totalCount: Int!
 }
 type OffsetPageInfo {
@@ -154,6 +171,13 @@ input UpdateOneCompanyInput {
     id: ID!
     update: CompanyUpdateInput!
 }
+input CompanyNoteCreateInput {
+    note: String!
+    companyId: ID!
+}
+input CreateOneCompanyNoteInput {
+    companyNote: CompanyNoteCreateInput!
+}
 input OffsetPaging {
     limit: Int
     offset: Int
@@ -165,10 +189,11 @@ input EventSort {
 }
 
 type RootQuery {
-    AgentIdentity: AuthAgentData!
+    me: User!
     users: UserConnection!
     company(id: ID!): Company!
     companies: CompanyConnection!
+    companyNotes: CompanyNoteConnection!
     contacts: ContactsConnection!
     deals: DealsConnection!
     events: EventConnection! 
@@ -180,6 +205,7 @@ type RootMutation {
     createAgentLogin(agentInput: AgentInput): Agent
     createOneCompany(input: CreateOneCompanyInput!): Company!
     updateOneCompany(input: UpdateOneCompanyInput!): Company!
+    createOneCompanyNote(input: CreateOneCompanyNoteInput!): CompanyNote!
 }
 
 schema {

@@ -1,6 +1,8 @@
 const Company = require("../../models/company");
+const CompanyNote = require("../../models/companyNote");
 const User = require('../../models/user');
 const { transformCompany } = require('./merge');
+const { transformCompanyNote } = require('./merge');
 
 module.exports={
     createOneCompany: async (args, req) => {
@@ -138,5 +140,76 @@ module.exports={
          //console.log(companyToUpdate[0]);
 
        return transformCompany(companyToUpdate[0]);
+    },
+
+    createOneCompanyNote: async (args, req) => {
+        if(!req.isAuth){
+            throw new Error('Unauthenticated');
+        }
+        //console.log(args);
+        const companyToAddNote = await Company.find({id: args.input.companyNote.companyId});
+        //console.log((companyToAddNote[0]._id).toString());
+        let allCompanyNotes = [];
+        const companyNotesAll = await CompanyNote.find();
+            companyNotesAll.map(companyNote => {
+                allCompanyNotes.push(companyNote);
+            })
+        const companyNote = new CompanyNote({
+            id: allCompanyNotes.length + 1,
+            note: args.input.companyNote.note,
+            createdBy: req.userId,
+            company: (companyToAddNote[0]._id).toString()
+        })
+
+        //console.log(companyNote);
+        let companieNote;
+        try{
+            const result = await companyNote.save();
+            companieNote = transformCompanyNote(result);
+
+            const company = await Company.findById(companyToAddNote[0]._id);
+            //console.log(company);
+            if (!company){
+                throw new Error('Client does not exists');
+            }
+            let companyNotesArr=[];
+            const companyNotes1 = await CompanyNote.find({company: companyToAddNote[0]._id});
+                companyNotes1.map(note => {
+                     //console.log(company);
+                companyNotesArr.push(note);
+                //console.log(companiesArr.length);
+            })
+            //companiesArr.push(company)
+            company.notes = {
+                totalCount: companyNotesArr.length,
+                nodes: companyNotesArr
+            } 
+            //console.log(company);
+            await company.save();
+             //console.log(companieNote);
+            return companieNote;
+        }catch(err){
+            throw err;
+        }
+     },
+
+     companyNotes: async (args, req) => {
+        if(!req.isAuth){
+            throw new Error('Unauthenticated');
+        }
+        try {
+            let companyNotesArr=[];
+            const companyNotes1 = await CompanyNote.find();
+                companyNotes1.map(companyNote => {
+                    companyNotesArr.push(transformCompanyNote(companyNote));
+                })
+                const companyNotes = {
+                    totalCount: companyNotesArr.length,
+                    nodes: companyNotesArr
+                }
+                return companyNotes             
+        } catch (error) {
+            throw error
+        }
     }
 }

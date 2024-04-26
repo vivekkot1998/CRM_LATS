@@ -47,6 +47,16 @@ const companySchema = new Schema({
     phoneNumber: {
         type: String,
         required: false
+    },
+    notes: {
+        totalCount: {
+            type: String,
+            required: true
+        },
+        nodes: [{
+            type: Schema.Types.ObjectId,
+            ref: 'CompanyNote'
+        }]
     }
 });
 
