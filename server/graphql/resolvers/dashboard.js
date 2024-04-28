@@ -89,18 +89,18 @@ module.exports = {
         return contacts
         
     },
-    deals: async (args, req) => {
-        //console.log(req);
-        if(!req.isAuth){
-            throw new Error('Unauthenticated');
-        }
-        const deals= {
-            totalCount: 1
-        }
+    // deals: async (args, req) => {
+    //     //console.log(req);
+    //     if(!req.isAuth){
+    //         throw new Error('Unauthenticated');
+    //     }
+    //     const deals= {
+    //         totalCount: 1
+    //     }
 
-        return deals
+    //     return deals
         
-    },
+    // },
     events: async (args,req) => {
         if(!req.isAuth){
             throw new Error('Unauthenticated');

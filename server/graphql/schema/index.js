@@ -90,7 +90,9 @@ type CompanyNotesConnection {
 type  ContactsConnection{
     totalCount: Int!
 }
-type  DealsConnection{
+type DealConnection {
+    pageInfo: OffsetPageInfo!
+    nodes: [Deal!]!
     totalCount: Int!
 }
 type EventConnection {
@@ -101,6 +103,30 @@ type EventConnection {
 type CompanyNoteConnection {
     pageInfo: OffsetPageInfo!
     nodes: [CompanyNote!]!
+    totalCount: Int!
+}
+type DealStage {
+    id: ID!
+    title: String!
+}
+type Deal {
+    id: ID!
+    title: String!
+    value: Float
+    stageId: ID
+    dealOwnerId: ID!
+    companyId: ID!
+    createdAt: DateTime
+    updatedAt: DateTime
+    createdBy: User!
+    updatedBy: User
+    company: Company!
+    stage: DealStage
+    dealOwner: User!
+}
+type DealStageConnection {
+    pageInfo: OffsetPageInfo!
+    nodes: [DealStage!]!
     totalCount: Int!
 }
 type OffsetPageInfo {
@@ -187,6 +213,33 @@ input CompanyNoteCreateInput {
 input CreateOneCompanyNoteInput {
     companyNote: CompanyNoteCreateInput!
 }
+input CreateOneDealStageInput {
+    dealStage: DealStageCreateInput!
+}
+input DealStageCreateInput {
+    title: String!
+}
+input DealCreateInput {
+    title: String!
+    value: Float
+    companyId: ID!
+    stageId: ID
+    dealOwnerId: ID!
+}
+input CreateOneDealInput {
+    deal: DealCreateInput!
+}
+input DealUpdateInput {
+    title: String
+    value: Float
+    companyId: ID
+    stageId: ID
+    dealOwnerId: ID
+}
+input UpdateOneDealInput{
+    id: ID!
+    update: DealUpdateInput!
+}
 input OffsetPaging {
     limit: Int
     offset: Int
@@ -203,8 +256,10 @@ type RootQuery {
     company(id: ID!): Company!
     companies: CompanyConnection!
     companyNotes(filter: CompanyNoteFilter = {}): CompanyNoteConnection!
+    dealStages: DealStageConnection!
     contacts: ContactsConnection!
-    deals: DealsConnection!
+    deals: DealConnection!
+    deal(id: ID!): Deal!
     events: EventConnection! 
 }
 
@@ -215,6 +270,9 @@ type RootMutation {
     createOneCompany(input: CreateOneCompanyInput!): Company!
     updateOneCompany(input: UpdateOneCompanyInput!): Company!
     createOneCompanyNote(input: CreateOneCompanyNoteInput!): CompanyNote!
+    createOneDealStage(input: CreateOneDealStageInput!): DealStage!
+    createOneDeal(input: CreateOneDealInput!): Deal!
+    updateOneDeal(input: UpdateOneDealInput!): Deal!
 }
 
 schema {

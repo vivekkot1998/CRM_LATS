@@ -24,10 +24,10 @@ module.exports = {
                 password: hashedPassword,
                 avatarUrl: "NA",
                 role: args.input.user.role,
-                companies: {
-                    totalCount: 0,
-                    nodes: []
-                }
+                // companies: {
+                //     totalCount: 0,
+                //     nodes: []
+                // }
             })
             //console.log(user);
             const result = await user.save();

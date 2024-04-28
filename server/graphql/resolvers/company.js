@@ -1,19 +1,20 @@
 const Company = require("../../models/company");
 const CompanyNote = require("../../models/companyNote");
 const User = require('../../models/user');
+const DealStage = require('../../models/dealStage');
+const Deal = require('../../models/deal');
+
 const { transformCompany } = require('./merge');
 const { transformCompanyNote } = require('./merge');
+const { transformDeal } = require('./merge');
 
 module.exports={
     createOneCompany: async (args, req) => {
-        //console.log(req.userId);
+        
         if(!req.isAuth){
             throw new Error('Unauthenticated');
         }
-        // console.log(args);
-        // console.log(req);
-        //const user = await User.findOne({id: req.userId});
-        // console.log(user);
+        
         let allCompany=[];
         const companyAll = await Company.find();
             companyAll.map(company => {
@@ -43,13 +44,13 @@ module.exports={
                 companies1.map(company => {
                      //console.log(company);
                 companiesArr.push(company);
-                //console.log(companiesArr.length);
+                //console.log(companiesArr);
             })
             //companiesArr.push(company)
             salesOwner.companies = {
                 totalCount: companiesArr.length,
                 nodes: companiesArr
-            } 
+            }
             await salesOwner.save();
             return companie;
          }catch(err){
@@ -165,7 +166,7 @@ module.exports={
         let companieNote;
         try{
             const result = await companyNote.save();
-            companieNote = transformCompanyNote(result);
+                companieNote = transformCompanyNote(result);
 
             const company = await Company.findById(companyToAddNote[0]._id);
             //console.log(company);
@@ -205,7 +206,7 @@ module.exports={
             return transformCompanyNote(companyNotes2);
         }));
 
-        console.log(companyNotesArr);
+        //console.log(companyNotesArr);
 
         const companyNotes = {
             totalCount: companyNotesArr.length,
@@ -215,5 +216,152 @@ module.exports={
         } catch (error) {
             throw error
         }
+    },
+
+    createOneDealStage: async (args,req) => {
+        if(!req.isAuth){
+            throw new Error('Unauthneticated');
+        }
+        //console.log(args.input.dealStage.title);
+        const allDealStages = [];
+        const dealStagesAll = await DealStage.find();
+            dealStagesAll.map(dealStage => {
+                allDealStages.push(dealStage);
+            })
+        const dealStage = new DealStage({
+            id: allDealStages.length + 1,
+            title: args.input.dealStage.title
+        })
+        // console.log(dealStage);
+        const result = await dealStage.save()
+        return result;
+        // return dealStage;
+    },
+
+    dealStages: async(args,req) => {
+        if(!req.isAuth){
+            throw new Error('Unauthenticated');
+        }
+        try{
+            let dealStagesArr=[];
+            const dealStages1 = await DealStage.find();
+                dealStages1.map(DealStage => {
+                     //console.log(company);
+                dealStagesArr.push(DealStage);
+                //console.log(companiesArr.length);
+            })
+            const dealStages= {
+                totalCount: dealStagesArr.length,
+                nodes: dealStagesArr
+            }
+        
+                return dealStages
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    createOneDeal: async(args, req) => {
+        if(!req.isAuth){
+            throw new Error('Unauthenticated');
+        }
+        //console.log(args);
+        const allDeals = [];
+       
+            const dealsAll = await Deal.find();
+                dealsAll.map(deal => {
+                    allDeals.push(deal);
+                })
+
+            const companyBeingSearched = await Company.find({id: args.input.deal.companyId});
+             //console.log(companyBeingSearched[0]);
+
+            const dealOwnerBeingSearched = await User.find({id: args.input.deal.dealOwnerId}); 
+                //console.log(dealOwnerBeingSearched[0]);
+
+        const deal = new Deal({
+            id: allDeals.length + 1,
+            title: args.input.deal.title,
+            value: args.input.deal.value,
+            stageId: args.input.deal.stageId,
+            companyId: args.input.deal.companyId,
+            dealOwnerId: args.input.deal.dealOwnerId,
+            company: companyBeingSearched[0],
+            dealOwner: dealOwnerBeingSearched[0]
+        })
+         //console.log(deal);
+        const result = await deal.save()
+        return result;
+    },
+
+    deals: async (args, req) => {
+        //console.log(req);
+        if(!req.isAuth){
+            throw new Error('Unauthenticated');
+        }
+        try{
+            let dealsArr=[];
+            const deals1 = await Deal.find();
+                deals1.map(deal => {
+                     
+                     dealsArr.push(transformDeal(deal));
+                
+            })
+            const deals= {
+                totalCount: dealsArr.length,
+                nodes: dealsArr
+            }
+        
+                return deals
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    deal: async(args,req) => {
+        if(!req.isAuth){
+            throw new Error('Unauthenticated');
+        }
+        //console.log(args);
+        try{
+            const dealBeingSearched = await Deal.find({id: args.id});
+             //console.log(companyBeingSearched);
+            return transformDeal(dealBeingSearched[0]);
+        }catch(err){
+            throw err;
+        }
+        
+
+    },
+
+    updateOneDeal: async(args,req) => {
+        if(!req.isAuth){
+            throw new Error('Unauthenticated');
+        }
+
+        //console.log(args);
+
+        const dealToUpdate = await Deal.find({id: args.input.id});
+        // console.log(dealToUpdate);
+
+        if(args.input.update.title){
+            dealToUpdate[0].title = args.input.update.title;
+        }
+        if(args.input.update.value){
+            dealToUpdate[0].value = args.input.update.value;
+        }
+        if(args.input.update.companyId){
+            dealToUpdate[0].companyId = args.input.update.companyId;
+        }
+        if(args.input.update.stageId){
+            dealToUpdate[0].stageId = args.input.update.stageId;
+        }
+        if(args.input.update.dealOwnerId){
+            dealToUpdate[0].dealOwnerId = args.input.update.dealOwnerId;
+        }
+
+        dealToUpdate[0].save();
+
+        return transformDeal(dealToUpdate[0]);
     }
 }

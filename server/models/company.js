@@ -51,7 +51,7 @@ const companySchema = new Schema({
     notes: {
         totalCount: {
             type: String,
-            required: true
+            required: false
         },
         nodes: [{
             type: Schema.Types.ObjectId,
