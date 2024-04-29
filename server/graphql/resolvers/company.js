@@ -290,31 +290,96 @@ module.exports={
             dealOwner: dealOwnerBeingSearched[0]
         })
          //console.log(deal);
-        const result = await deal.save()
-        return result;
+        // const result = await deal.save()
+        // return result;
+
+        
+        let dealToReturn;
+         try{
+          const result = await deal.save()
+            dealToReturn = transformDeal(result);
+              //console.log(result);
+            const company = await Company.findById(companyBeingSearched[0]);
+            
+            if (!company){
+                throw new Error('Client does not exists');
+            }
+            let dealsArr=[];
+            const deals1 = await Deal.find({company: companyBeingSearched[0]});
+                deals1.map(deal => {
+                     
+                     dealsArr.push(deal);
+                
+            })
+            
+            company.deals = {
+                totalCount: dealsArr.length,
+                nodes: dealsArr
+            }
+            await company.save();
+            return dealToReturn;
+         }catch(err){
+             throw err;
+         }
     },
 
     deals: async (args, req) => {
         //console.log(req);
-        if(!req.isAuth){
+        // if(!req.isAuth){
+        //     throw new Error('Unauthenticated');
+        // }
+        // try {
+        //     const filterCompany = await Company.find({id: args.filter.company.id.eq })
+        //     const companyDeals1 = filterCompany[0].deals.nodes
+        //    const companyDealsArr = await Promise.all(companyDeals1.map(async (companyDeal) => {
+        //     const companyDeals2 = await Deal.findById(companyDeal);
+        //     return transformDeal(companyDeals2);
+        // }));
+
+        // //console.log(companyNotesArr);
+
+        // const companyDeals = {
+        //     totalCount: companyDealsArr.length,
+        //     nodes: companyDealsArr
+        // };
+        //         return companyDeals 
+        // } catch (error) {
+        //     throw error
+        // }
+
+        if (!req.isAuth) {
             throw new Error('Unauthenticated');
         }
-        try{
-            let dealsArr=[];
-            const deals1 = await Deal.find();
-                deals1.map(deal => {
-                     
-                     dealsArr.push(transformDeal(deal));
-                
-            })
-            const deals= {
-                totalCount: dealsArr.length,
-                nodes: dealsArr
+    
+        try {
+            let companyDealsArr = [];
+    
+            if (Object.keys(args.filter).length === 0) {
+                // If filter is empty, fetch all deals
+                const allDeals = await Deal.find();
+                companyDealsArr = await Promise.all(allDeals.map(async (deal) => {
+                    return transformDeal(deal);
+                }));
+            } else {
+                // If filter is provided, apply filtering criteria
+                const companyId = args.filter.company.id.eq;
+                const filterCompany = await Company.find({ id: companyId });
+                const companyDeals1 = filterCompany[0].deals.nodes;
+    
+                companyDealsArr = await Promise.all(companyDeals1.map(async (companyDeal) => {
+                    const companyDealDoc = await Deal.findById(companyDeal);
+                    return transformDeal(companyDealDoc);
+                }));
             }
-        
-                return deals
-        } catch (err) {
-            throw err;
+    
+            const companyDeals = {
+                totalCount: companyDealsArr.length,
+                nodes: companyDealsArr
+            };
+    
+            return companyDeals;
+        } catch (error) {
+            throw error;
         }
     },
 

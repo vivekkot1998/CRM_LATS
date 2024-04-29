@@ -1,6 +1,7 @@
 const Company = require('../../models/company');
 const User = require('../../models/user');
 const CompanyNote = require('../../models/companyNote');
+const Deal = require('../../models/deal')
 
 // const { dateToString } = require('../../helpers/date');
 
@@ -17,16 +18,38 @@ const companyNodes = async companyIds => {
 };
 
 const company = async compnayID => {
+    //  console.log(compnayID);
     try{
         const company = await Company.findById(compnayID);
+        //console.log(company._doc.deals);
         //return transformCompany(Company);
         return {
             ...company._doc, 
             // _id: company.id,
             salesOwner: user.bind(this, company.salesOwner), 
-            notes: companyCompanyNotesConnection.bind(this, company._doc.notes)
+            notes: companyCompanyNotesConnection.bind(this, company._doc.notes),
+            deals: companyCompanyDealsConnection.bind(this, company._doc.deals)
         };
     }catch (err) {
+        throw err;
+    }
+}
+
+const companyCompanyDealsConnection = async deals => {
+    //console.log(deals);
+    return {
+        totalCount: deals.totalCount,
+        nodes: companyDeals.bind(this, deals.nodes)
+    }
+}
+
+const companyDeals = async dealsIds => {
+    try{
+        const deals = await Deal.find({_id: {$in: dealsIds}}) 
+        return deals.map(deal => {
+            return transformDeal(deal);
+        });
+    }catch(err) {
         throw err;
     }
 }

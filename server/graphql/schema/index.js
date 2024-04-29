@@ -60,6 +60,7 @@ type Company{
     postcode: String
     phoneNumber: String
     notes: CompanyNotesConnection
+    deals: CompanyDealsConnection
 }
 type CompanyNote {
     id: ID!
@@ -87,6 +88,11 @@ type CompanyNotesConnection {
     nodes: [CompanyNote!]!
     totalCount: Int!
 }
+type CompanyDealsConnection {
+    pageInfo: OffsetPageInfo!
+    nodes: [Deal!]!
+    totalCount: Int!
+    }
 type  ContactsConnection{
     totalCount: Int!
 }
@@ -203,6 +209,12 @@ input CompanyNoteFilter {
 input CompanyNoteFilterCompanyFilter{
     id: IDFilterComparison
 }
+input DealFilter{
+    company: DealFilterCompanyFilter
+}
+input DealFilterCompanyFilter{
+    id: IDFilterComparison
+}
 input IDFilterComparison {
     eq:ID
 }
@@ -258,7 +270,7 @@ type RootQuery {
     companyNotes(filter: CompanyNoteFilter = {}): CompanyNoteConnection!
     dealStages: DealStageConnection!
     contacts: ContactsConnection!
-    deals: DealConnection!
+    deals(filter: DealFilter! = {}): DealConnection!
     deal(id: ID!): Deal!
     events: EventConnection! 
 }

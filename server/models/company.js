@@ -57,6 +57,16 @@ const companySchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'CompanyNote'
         }]
+    },
+    deals: {
+        totalCount: {
+            type: String,
+            required: false
+        },
+        nodes: [{
+            type: Schema.Types.ObjectId,
+            ref: 'Deal'
+        }]
     }
 });
 
