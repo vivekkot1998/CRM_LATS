@@ -279,11 +279,20 @@ module.exports={
             const dealOwnerBeingSearched = await User.find({id: args.input.deal.dealOwnerId}); 
                 //console.log(dealOwnerBeingSearched[0]);
 
+                let stage;
+            if(args.input.deal.stageId != null){
+                const stageArr = await DealStage.find({id: args.input.deal.stageId});
+                stage = stageArr[0];
+            }
+
+            //console.log(stage);
+
         const deal = new Deal({
             id: allDeals.length + 1,
             title: args.input.deal.title,
             value: args.input.deal.value,
             stageId: args.input.deal.stageId,
+            stage: stage,
             companyId: args.input.deal.companyId,
             dealOwnerId: args.input.deal.dealOwnerId,
             company: companyBeingSearched[0],
@@ -324,29 +333,6 @@ module.exports={
     },
 
     deals: async (args, req) => {
-        //console.log(req);
-        // if(!req.isAuth){
-        //     throw new Error('Unauthenticated');
-        // }
-        // try {
-        //     const filterCompany = await Company.find({id: args.filter.company.id.eq })
-        //     const companyDeals1 = filterCompany[0].deals.nodes
-        //    const companyDealsArr = await Promise.all(companyDeals1.map(async (companyDeal) => {
-        //     const companyDeals2 = await Deal.findById(companyDeal);
-        //     return transformDeal(companyDeals2);
-        // }));
-
-        // //console.log(companyNotesArr);
-
-        // const companyDeals = {
-        //     totalCount: companyDealsArr.length,
-        //     nodes: companyDealsArr
-        // };
-        //         return companyDeals 
-        // } catch (error) {
-        //     throw error
-        // }
-
         if (!req.isAuth) {
             throw new Error('Unauthenticated');
         }

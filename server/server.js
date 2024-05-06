@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const connectDb = require('./utils/db');
 const cors = require('cors');
+const status = require('express-status-monitor');
 
 const  {graphqlHTTP}  = require('express-graphql');
 
@@ -12,6 +13,8 @@ const graphqlResolvers = require('./graphql/resolvers/index');
 const isAuth = require('./middleware/is-auth');
 
 const app = express();
+
+app.use(status());
 
 app.use(bodyParser.json());
 app.use(cors());

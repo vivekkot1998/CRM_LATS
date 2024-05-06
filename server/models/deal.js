@@ -19,6 +19,10 @@ const dealSchema = new Schema({
         type: String,
         required: false
     },
+    stage: {
+        type: Schema.Types.ObjectId,
+        ref: 'DealStage'
+    },
     companyId: {
         type: String,
         required: true

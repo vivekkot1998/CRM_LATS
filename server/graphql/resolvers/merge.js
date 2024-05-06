@@ -1,7 +1,8 @@
 const Company = require('../../models/company');
 const User = require('../../models/user');
 const CompanyNote = require('../../models/companyNote');
-const Deal = require('../../models/deal')
+const Deal = require('../../models/deal');
+const DealStage = require('../../models/dealStage');
 
 // const { dateToString } = require('../../helpers/date');
 
@@ -99,6 +100,26 @@ const user = async userID => {
     }
 };
 
+const dealStage = async stageId => {
+    // console.log(stageId);
+    const stage = await DealStage.findById(stageId);
+
+    if(stage != null){
+        //console.log(stage);
+        return {
+            id: stage.id,
+            title: stage.title
+        }
+    }else{
+        // return {
+        //     id: null,
+        //     title: "Unassigned"
+        // }
+        return null
+    }
+   
+}
+
 const transformCompany = company => {
     //console.log("here5");
     //console.log("here:",company._doc);
@@ -134,6 +155,7 @@ const transformDeal = deal => {
         ...deal._doc, 
         //_id: companyNote.id, 
         // date: dateToString(company._doc.date),
+        stage: dealStage.bind(this, deal.stage),
         company: company.bind(this, deal.company),
         dealOwner: user.bind(this, deal.dealOwner)
     };

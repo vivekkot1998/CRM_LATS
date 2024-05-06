@@ -112,7 +112,7 @@ type CompanyNoteConnection {
     totalCount: Int!
 }
 type DealStage {
-    id: ID!
+    id: ID
     title: String!
 }
 type Deal {
